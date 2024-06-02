@@ -1,0 +1,9 @@
+{
+	"name": "retailsadf",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "9103bb1f-3fdd-43fc-ac71-d23698fe9d20",
+		"tenantId": "01d0a7d7-12e7-422a-9a39-9c406c7e4496"
+	}
+}
