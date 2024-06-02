@@ -1,0 +1,22 @@
+{
+	"name": "ds_retail_http_input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_http_retail_input",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "/v0/b/music-player-98871.appspot.com/o/Online%20Retail.csv?alt=media&token=4fd617d7-5ea5-4cc5-a3a7-d875aa35527b"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
