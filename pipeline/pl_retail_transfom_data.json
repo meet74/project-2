@@ -1,0 +1,28 @@
+{
+	"name": "pl_retail_transfom_data",
+	"properties": {
+		"activities": [
+			{
+				"name": "transfoemed_notebook",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Repos/shriji74@outlook.com/project-2-retail/Databricks/retail-project/transform_retail_data"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
