@@ -1,0 +1,77 @@
+{
+	"name": "ds_synapse_output",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_synapse",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "invoice_no",
+				"type": "nvarchar"
+			},
+			{
+				"name": "stock_code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "quantity",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "invoice_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "unit_price",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "customer_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "country",
+				"type": "nvarchar"
+			},
+			{
+				"name": "total_price",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "transaction_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "invoice_year",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "invoice_month",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "invoice_day_of_week",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "cleaned_retail_data"
+		}
+	}
+}

@@ -1,0 +1,73 @@
+{
+	"name": "ds_synapse_input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_retail_raw_output",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "processed/retail",
+				"fileSystem": "retail-project"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "invoice_no",
+				"type": "INT32"
+			},
+			{
+				"name": "stock_code",
+				"type": "INT32"
+			},
+			{
+				"name": "description",
+				"type": "UTF8"
+			},
+			{
+				"name": "quantity",
+				"type": "INT32"
+			},
+			{
+				"name": "invoice_date",
+				"type": "INT96"
+			},
+			{
+				"name": "unit_price",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "customer_id",
+				"type": "INT32"
+			},
+			{
+				"name": "country",
+				"type": "UTF8"
+			},
+			{
+				"name": "total_price",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "transaction_id",
+				"type": "UTF8"
+			},
+			{
+				"name": "invoice_year",
+				"type": "INT32"
+			},
+			{
+				"name": "invoice_month",
+				"type": "INT32"
+			},
+			{
+				"name": "invoice_dayof_week",
+				"type": "UTF8"
+			}
+		]
+	}
+}
