@@ -5,11 +5,17 @@
 		"factoryName": {
 			"value": "retailsadf"
 		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
 		"ls_retail_raw_output_accountKey": {
 			"value": ""
 		},
-		"AzureDatabricks1_accessToken": {
+		"ls_synapse_password": {
 			"value": ""
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"value": "0602-234319-fsjt4xb4"
 		},
 		"ls_http_retail_input_properties_typeProperties_url": {
 			"value": "https://firebasestorage.googleapis.com"
@@ -17,8 +23,14 @@
 		"ls_retail_raw_output_properties_typeProperties_url": {
 			"value": "https://retailsadls.dfs.core.windows.net/"
 		},
-		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
-			"value": "0602-234319-fsjt4xb4"
+		"ls_synapse_properties_typeProperties_server": {
+			"value": "health-synapse.sql.azuresynapse.net"
+		},
+		"ls_synapse_properties_typeProperties_database": {
+			"value": "shriji"
+		},
+		"ls_synapse_properties_typeProperties_userName": {
+			"value": "shriji"
 		}
 	}
 }

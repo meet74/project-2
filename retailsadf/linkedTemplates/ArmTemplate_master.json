@@ -7,13 +7,21 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "retailsadf"
 		},
+		"AzureDatabricks1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
+		},
 		"ls_retail_raw_output_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_retail_raw_output'"
 		},
-		"AzureDatabricks1_accessToken": {
+		"ls_synapse_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
+			"metadata": "Secure string for 'password' of 'ls_synapse'"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0602-234319-fsjt4xb4"
 		},
 		"ls_http_retail_input_properties_typeProperties_url": {
 			"type": "string",
@@ -23,9 +31,17 @@
 			"type": "string",
 			"defaultValue": "https://retailsadls.dfs.core.windows.net/"
 		},
-		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+		"ls_synapse_properties_typeProperties_server": {
 			"type": "string",
-			"defaultValue": "0602-234319-fsjt4xb4"
+			"defaultValue": "health-synapse.sql.azuresynapse.net"
+		},
+		"ls_synapse_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "shriji"
+		},
+		"ls_synapse_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "shriji"
 		},
 		"containerUri": {
 			"type": "string",
@@ -54,11 +70,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureDatabricks1_accessToken": {
+						"value": "[parameters('AzureDatabricks1_accessToken')]"
+					},
 					"ls_retail_raw_output_accountKey": {
 						"value": "[parameters('ls_retail_raw_output_accountKey')]"
 					},
-					"AzureDatabricks1_accessToken": {
-						"value": "[parameters('AzureDatabricks1_accessToken')]"
+					"ls_synapse_password": {
+						"value": "[parameters('ls_synapse_password')]"
+					},
+					"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
 					},
 					"ls_http_retail_input_properties_typeProperties_url": {
 						"value": "[parameters('ls_http_retail_input_properties_typeProperties_url')]"
@@ -66,8 +88,14 @@
 					"ls_retail_raw_output_properties_typeProperties_url": {
 						"value": "[parameters('ls_retail_raw_output_properties_typeProperties_url')]"
 					},
-					"AzureDatabricks1_properties_typeProperties_existingClusterId": {
-						"value": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
+					"ls_synapse_properties_typeProperties_server": {
+						"value": "[parameters('ls_synapse_properties_typeProperties_server')]"
+					},
+					"ls_synapse_properties_typeProperties_database": {
+						"value": "[parameters('ls_synapse_properties_typeProperties_database')]"
+					},
+					"ls_synapse_properties_typeProperties_userName": {
+						"value": "[parameters('ls_synapse_properties_typeProperties_userName')]"
 					}
 				}
 			},

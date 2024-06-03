@@ -7,13 +7,21 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "retailsadf"
 		},
+		"AzureDatabricks1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
+		},
 		"ls_retail_raw_output_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_retail_raw_output'"
 		},
-		"AzureDatabricks1_accessToken": {
+		"ls_synapse_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
+			"metadata": "Secure string for 'password' of 'ls_synapse'"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0602-234319-fsjt4xb4"
 		},
 		"ls_http_retail_input_properties_typeProperties_url": {
 			"type": "string",
@@ -23,15 +31,41 @@
 			"type": "string",
 			"defaultValue": "https://retailsadls.dfs.core.windows.net/"
 		},
-		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+		"ls_synapse_properties_typeProperties_server": {
 			"type": "string",
-			"defaultValue": "0602-234319-fsjt4xb4"
+			"defaultValue": "health-synapse.sql.azuresynapse.net"
+		},
+		"ls_synapse_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "shriji"
+		},
+		"ls_synapse_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "shriji"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricks1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-3107986375698214.14.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDatabricks1_accessToken')]"
+					},
+					"existingClusterId": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ls_http_retail_input')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -65,78 +99,26 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureDatabricks1')]",
+			"name": "[concat(parameters('factoryName'), '/ls_synapse')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureDatabricks",
+				"type": "AzureSqlDW",
 				"typeProperties": {
-					"domain": "https://adb-3107986375698214.14.azuredatabricks.net",
-					"accessToken": {
+					"server": "[parameters('ls_synapse_properties_typeProperties_server')]",
+					"database": "[parameters('ls_synapse_properties_typeProperties_database')]",
+					"encrypt": "optional",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_synapse_properties_typeProperties_userName')]",
+					"password": {
 						"type": "SecureString",
-						"value": "[parameters('AzureDatabricks1_accessToken')]"
-					},
-					"existingClusterId": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
+						"value": "[parameters('ls_synapse_password')]"
+					}
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_retail_adls_output')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_retail_raw_output",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "online-retail",
-						"folderPath": "raw",
-						"fileSystem": "retail-project"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_retail_raw_output')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_retail_http_input')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_http_retail_input",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": "/v0/b/music-player-98871.appspot.com/o/Online%20Retail.csv?alt=media&token=4fd617d7-5ea5-4cc5-a3a7-d875aa35527b"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_http_retail_input')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pl_retail_clean_data')]",
@@ -208,6 +190,222 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricks1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_retail_adls_output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_retail_raw_output",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "online-retail",
+						"folderPath": "raw",
+						"fileSystem": "retail-project"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_retail_raw_output')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_retail_http_input')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_http_retail_input",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": "/v0/b/music-player-98871.appspot.com/o/Online%20Retail.csv?alt=media&token=4fd617d7-5ea5-4cc5-a3a7-d875aa35527b"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_http_retail_input')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_synapse_input')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_retail_raw_output",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "processed/retail",
+						"fileSystem": "retail-project"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "invoice_no",
+						"type": "INT32"
+					},
+					{
+						"name": "stock_code",
+						"type": "INT32"
+					},
+					{
+						"name": "description",
+						"type": "UTF8"
+					},
+					{
+						"name": "quantity",
+						"type": "INT32"
+					},
+					{
+						"name": "invoice_date",
+						"type": "INT96"
+					},
+					{
+						"name": "unit_price",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "customer_id",
+						"type": "INT32"
+					},
+					{
+						"name": "country",
+						"type": "UTF8"
+					},
+					{
+						"name": "total_price",
+						"type": "DOUBLE"
+					},
+					{
+						"name": "transaction_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "invoice_year",
+						"type": "INT32"
+					},
+					{
+						"name": "invoice_month",
+						"type": "INT32"
+					},
+					{
+						"name": "invoice_dayof_week",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_retail_raw_output')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_synapse_output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_synapse",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "invoice_no",
+						"type": "nvarchar"
+					},
+					{
+						"name": "stock_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "description",
+						"type": "nvarchar"
+					},
+					{
+						"name": "quantity",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "invoice_date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "unit_price",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "customer_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "country",
+						"type": "nvarchar"
+					},
+					{
+						"name": "total_price",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "transaction_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": "invoice_year",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "invoice_month",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "invoice_day_of_week",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "cleaned_retail_data"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_synapse')]"
 			]
 		},
 		{
@@ -368,6 +566,104 @@
 				"[concat(variables('factoryId'), '/pipelines/pl_http_fetch_retail_data')]",
 				"[concat(variables('factoryId'), '/pipelines/pl_retail_clean_data')]",
 				"[concat(variables('factoryId'), '/pipelines/pl_retail_transfom_data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_copy_to_synapse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "exec_pipeline_runs",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pl_pipeline_runs",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "copy_to_synapse",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "exec_pipeline_runs",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "processed/retail",
+									"wildcardFileName": "*.parquet",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"writeBehavior": "Insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_synapse_input",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_synapse_output",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pl_pipeline_runs')]",
+				"[concat(variables('factoryId'), '/datasets/ds_synapse_input')]",
+				"[concat(variables('factoryId'), '/datasets/ds_synapse_output')]"
 			]
 		}
 	]
