@@ -8,11 +8,17 @@
 		"ls_retail_raw_output_accountKey": {
 			"value": ""
 		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
 		"ls_http_retail_input_properties_typeProperties_url": {
 			"value": "https://firebasestorage.googleapis.com"
 		},
 		"ls_retail_raw_output_properties_typeProperties_url": {
 			"value": "https://retailsadls.dfs.core.windows.net/"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"value": "0602-234319-fsjt4xb4"
 		}
 	}
 }
